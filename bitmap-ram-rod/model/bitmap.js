@@ -54,6 +54,18 @@ module.exports = (path, transform, callback) => {
       }
     };
 
+    //grayscale
+
+   if (transform === 'grayscale') {
+     for (let i = 0; i < colorTableArr.length; i) {
+       var grey = (colorTableArr[i] + colorTableArr[i + 1] + colorTableArr[i + 2]) / 3;
+       colorTableArr[i] = grey;
+       colorTableArr[i+1] = grey;
+       colorTableArr[i+2] = grey;
+       i = i + 4;
+     }
+   }
+
     //Push colorTableArr back into colorTableBuf
    let newColorTableBuf = Buffer.from(colorTableArr);
 
