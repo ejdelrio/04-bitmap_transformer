@@ -1,17 +1,13 @@
 'use srict';
 
 const fs = require('fs');
-const transform = require('../lib/transformer.js')
-console.log(transform)
+const transform = require('../lib/transformer.js');
 
 
 module.exports = (path) => {
 
   const Bitmap = function(buffer) {
     this.type = buffer.toString('utf-8', 0, 2);
-    this.width = buffer.readUInt16LE(22);
-    this.height = buffer.readUInt16LE(18);
-    this.size = buffer.readUInt16LE(2);
     this.pixelTableStart = buffer.readUInt16LE(10);
     this.bitsPerPixel = buffer.readUInt16LE(28);
     this.headerSize = buffer.readUInt16LE(14);
@@ -32,74 +28,35 @@ module.exports = (path) => {
 
   const TransformedBMP = function(asset, parent) {
     this.header = asset.slice(0, 14);
-    this.DIB = asset.slice(14, 54);
+    this.DIB = asset.slice(14, parent.headerSize);
+
     if(parent.colorTableStartPoint) this.colorPalette = asset.slice(14 + parent.headerSize, parent.pixelTableStart);
     this.pixelTable = asset.slice(parent.pixelTableStart);
 
     this.colorArr = this.colorPalette.toString('hex');
+    this.assetLength = asset.length;
 
+  };
+
+  TransformedBMP.prototype.compileBuffer = function() {
+    let newColorPalette = new Buffer(this.colorArr, 'hex');
+    return Buffer.concat([this.header, this.DIB, newColorPalette, this.pixelTable], this.assetlength);
+  };
+
+  TransformedBMP.prototype.newFile = function(fileName) {
+    let newBuffer = this.compileBuffer();
+    fs.writeFile(`../assets/${fileName}.bmp`, (err) => {
+      if(err) console.error(err);
+      console.log('verifier#: ' + newBuffer.readUInt32LE(58));
+    });
   };
 
   fs.readFile(path, (err, asset) => {
     if(err) console.error(err);
 
-    // let transformArray = ['changeRed', 'changeBlue', 'changeGreen', 'grayscale', 'invert'];
-
     let bitmap = new Bitmap(asset);
-    console.log(bitmap.transformedBMP.colorArr);
-    console.log(transform.blueShift(bitmap));
-    console.log(bitmap.transformedBMP.colorArr);
-
-
-
-
-    //
-    // let headerBuf = asset.slice(0,14);
-    // let DIBBuf = asset.slice(14, 54);
-    // let colorTableBuffer = asset.slice(54, Bitmap.pixelTableStart);
-    // //Same exact value. Delete one of these.
-    // // let colorTableBuf = asset.slice(54, Bitmap.pixelTableStart);
-    // let pixMapBuf = asset.slice(Bitmap.pixelTableStart);
-    //
-    // this takes the color table from buffer and puts it into an array
-    //
-    // let colorTableArr = Array.prototype.slice.call(colorTableBuffer);
-    //
-
-  //   //changeRed
-  //
-  //   if (transform === 'changeRed') {
-  //     for (let i = 2; i < colorTableArr.length; i) {
-  //       colorTableArr[i] = 255;
-  //       i = i + 4;
-  //     }
-  //   }
-  //
-  //   //grayscale
-  //
-  //  if (transform === 'grayscale') {
-  //    for (let i = 0; i < colorTableArr.length; i) {
-  //      var grey = (colorTableArr[i] + colorTableArr[i + 1] + colorTableArr[i + 2]) / 3;
-  //      colorTableArr[i] = grey;
-  //      colorTableArr[i+1] = grey;
-  //      colorTableArr[i+2] = grey;
-  //      i = i + 4;
-  //    }
-  //  }
-  //
-  //   //Push colorTableArr back into colorTableBuf
-  //  let newColorTableBuf = Buffer.from(colorTableArr);
-  //
-  //  //Recombine all four buffers
-  //  let newImgBuf = Buffer.concat([headerBuf, DIBBuf, newColorTableBuf, pixMapBuf], asset.length);
-  //
-  //  let newFilePath = path.slice(0, -4) + '-' + transform + '.bmp';
-  //
-  //  fs.writeFile(newFilePath, newImgBuf, (err) => {if (err) {return callback(new Error(err));} });
-  //  console.log('verifier#: ' + newImgBuf.readUInt32LE(58));
-  //  console.log('complete: wrote new file \'' + newFilePath + '\'...');
-  // //  return callback(null, newImgBuf.readUInt32LE(58));
-
+    transform.blueShift(bitmap);
+    bitmap.transformedBMP.newFile('red');
   });
 
 
