@@ -39,10 +39,42 @@ transform.greenShift = function(buffer) {
   );
 };
 
+transform.noGreen = function(buffer) {
+  transform.modify(buffer,
+    (blue) => blue,
+    () => '0',
+    (red) => red
+  );
+};
+
+transform.noBlue = function(buffer) {
+  transform.modify(buffer,
+    () => '0',
+    (green) => green,
+    (red) => red
+  );
+};
+
+transform.noRed = function(buffer) {
+  transform.modify(buffer,
+    (blue) => blue,
+    (green) => green,
+    () => '0'
+  );
+};
+
 transform.blackOut = function(buffer) {
   transform.modify(buffer,
     () => '0',
     () => '0',
     () => '0'
+  );
+};
+
+transform.whiteOut = function(buffer) {
+  transform.modify(buffer,
+    () => 'f',
+    () => 'f',
+    () => 'f'
   );
 };
