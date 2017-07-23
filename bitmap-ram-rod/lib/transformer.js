@@ -2,14 +2,17 @@
 
 const transform = module.exports = {};
 
-transform.modify = (buffer, blueCallback, greenCallback, redCallback) => {
-  let newColors = buffer.transformedBMP.colorArr;
-  for (let i = 3; i < newColors.length; i+=4) {
-    newColors[i - 3] = blueCallback(newColors[i - 3], newColors[i - 2], newColors[i - 1]);
-    newColors[i - 2] = greenCallback(newColors[i - 2], newColors[i - 3], newColors[i - 1]);
-    newColors[i - 1] = redCallback(newColors[i - 1], newColors[i - 2], newColors[i - 3]);
+transform.modify = (parent, blueCallback, greenCallback, redCallback) => {
+
+  const helper = function(callback, bmp, ...ind) {
+    return callback(bmp.buffer.readUInt8(ind[0]), bmp.buffer.readUInt8(ind[1]), bmp.buffer.readUInt8(ind[2]));
+  };
+
+  for (let i = 3 + parent.colorTableStartPoint; i < parent.colorTableEndPoint; i+=4) {
+    parent.buffer.writeUInt8(helper(blueCallback, parent, i-3, i-2, i-1), i - 3);
+    parent.buffer.writeUInt8(helper(greenCallback, parent, i-2, i-3, i-1), i - 2);
+    parent.buffer.writeUInt8(helper(redCallback, parent, i-1, i-2, i-3), i - 1);
   }
-  buffer.transformedBMP.colorArr = Buffer.from(newColors);
 };
 
 transform.blueShift = function(buffer) {
@@ -89,6 +92,6 @@ transform.invert = function(buffer) {
   transform.modify(buffer,
     helper,
     helper,
-    helper 
+    helper
   );
 };
