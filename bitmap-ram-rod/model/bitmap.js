@@ -33,14 +33,13 @@ module.exports = (path, callback, newFileName) => {
     if(parent.colorTableStartPoint) this.colorPalette = asset.slice(14 + parent.headerSize, parent.pixelTableStart);
     this.pixelTable = asset.slice(parent.pixelTableStart);
 
-    this.colorArr = this.colorPalette.toString('hex');
+    this.colorArr = Array.prototype.slice.call(this.colorPalette);
     this.assetLength = asset.length;
 
   };
 
   TransformedBMP.prototype.compileBuffer = function() {
-    let newColorPalette = new Buffer(this.colorArr, 'hex');
-    return Buffer.concat([this.header, this.DIB, newColorPalette, this.pixelTable], this.assetlength);
+    return Buffer.concat([this.header, this.DIB, this.colorArr, this.pixelTable], this.assetlength);
   };
 
   TransformedBMP.prototype.newFile = function(fileName) {
