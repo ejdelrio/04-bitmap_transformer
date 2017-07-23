@@ -1,30 +1,71 @@
 'use srict';
 
 const fs = require('fs');
+const transform = require('../lib/transformer.js');
 
-var bitmap;
-fs.readFile(`${__dirname}/../assets/palette-bitmap.bmp`, (err, asset) => {
-  if(err) console.error(err);
-  bitmap = new Bitmap(asset);
-  console.log(bitmap);
-});
 
-const Bitmap = function(buffer) {
-  this.width = buffer.readUInt32LE(22);
-  this.height = buffer.readUInt32LE(18);
-  this.pixelTableStart = buffer.readUInt32LE(10);
-  this.size = buffer.readUInt32LE(2);
-  this.type = buffer.toString('utf-8', 0, 2);
-  this.bitsPerPixel = buffer.readUInt32LE(28);
-  this.headerSize = buffer.readUInt32LE(14);
+module.exports = (path, callback, newFileName) => {
 
-  this.bitsPerPixel < 16 ?
-  this.colorTableStartPoint = this.headerSize + 14 :
-  this.pixelTableStart = this.headerSize + 14 ;
+  const Bitmap = function(buffer) {
+    this.type = buffer.toString('utf-8', 0, 2);
+    this.pixelTableStart = buffer.readUInt16LE(10);
+    this.bitsPerPixel = buffer.readUInt16LE(28);
+    this.headerSize = buffer.readUInt16LE(14);
 
-  this.pixelTableEnd = buffer.length;
-  this.colorTableStartPoint ?
-  this.colorTableEndPoint = this.pixelTableStart:
-  null;
-  this.buffer = buffer;
+    this.bitsPerPixel < 16 ?
+    this.colorTableStartPoint = this.headerSize + 14 :
+    this.pixelTableStart = this.headerSize + 14 ;
+
+    this.pixelTableEnd = buffer.length;
+
+    this.colorTableStartPoint ?
+    this.colorTableEndPoint = this.pixelTableStart:
+    null;
+
+    this.transformedBMP = new TransformedBMP(buffer, this);
+
+  };
+
+  const TransformedBMP = function(asset, parent) {
+    this.header = asset.slice(0, 14);
+    this.DIB = asset.slice(14, parent.headerSize + 14);
+
+    if(parent.colorTableStartPoint) this.colorPalette = asset.slice(14 + parent.headerSize, parent.pixelTableStart);
+    this.pixelTable = asset.slice(parent.pixelTableStart);
+
+    this.colorArr = this.colorPalette.toString('hex');
+    this.assetLength = asset.length;
+
+  };
+
+  TransformedBMP.prototype.compileBuffer = function() {
+    let newColorPalette = new Buffer(this.colorArr, 'hex');
+    return Buffer.concat([this.header, this.DIB, newColorPalette, this.pixelTable], this.assetlength);
+  };
+
+  TransformedBMP.prototype.newFile = function(fileName) {
+    let newBuffer = this.compileBuffer();
+    console.log(newBuffer.length);
+    fs.writeFile(`../assets/${fileName}.bmp`, newBuffer, (err) => {
+      if(err) console.error(err);
+      console.log('verifier#: ' + newBuffer.readUInt32LE(58));
+    });
+  };
+
+  fs.readFile(path, (err, asset) => {
+    if(err) console.error(err);
+
+    let bitmap = new Bitmap(asset);
+    callback(bitmap);
+    bitmap.transformedBMP.newFile(newFileName);
+  });
+
+
+
 };
+
+module.exports('../assets/palette-bitmap.bmp', transform.blackOut, 'black');
+
+
+//bitmap.readUInt8(1078)
+//Used to get color palette index
