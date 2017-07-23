@@ -22,28 +22,12 @@ module.exports = (path, callback, newFileName) => {
     this.colorTableEndPoint = this.pixelTableStart:
     null;
     this.buffer = buffer;
-    this.transformedBMP = new TransformedBMP(buffer, this);
 
   };
 
-  const TransformedBMP = function(asset, parent) {
-    this.header = asset.slice(0, 14);
-    this.DIB = asset.slice(14, parent.headerSize + 14);
 
-    if(parent.colorTableStartPoint) this.colorPalette = asset.slice(14 + parent.headerSize, parent.pixelTableStart);
-    this.pixelTable = asset.slice(parent.pixelTableStart);
-
-    this.colorArr = Array.prototype.slice.call(this.colorPalette);
-    this.assetLength = asset.length;
-
-  };
-
-  TransformedBMP.prototype.compileBuffer = function() {
-    return Buffer.concat([this.header, this.DIB, this.colorArr, this.pixelTable], this.assetlength);
-  };
-
-  TransformedBMP.prototype.newFile = function(fileName) {
-    let newBuffer = this.compileBuffer();
+  Bitmap.prototype.newFile = function(fileName) {
+    let newBuffer = this.buffer;
     fs.writeFile(`./assets/${fileName}.bmp`, newBuffer, (err) => {
       if(err) console.error(err);
       console.log(`${fileName}.bmp created!!`);
@@ -55,7 +39,7 @@ module.exports = (path, callback, newFileName) => {
 
     let bitmap = new Bitmap(asset);
     callback(bitmap);
-    bitmap.transformedBMP.newFile(newFileName);
+    bitmap.newFile(newFileName);
   });
 
 
