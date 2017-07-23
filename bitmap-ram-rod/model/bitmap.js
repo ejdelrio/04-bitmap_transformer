@@ -19,12 +19,19 @@ const Bitmap = function(buffer) {
   this.headerSize = buffer.readUInt32LE(14);
 
   this.bitsPerPixel < 16 ?
-  this.colorTableStartPoint = this.headerSize + 14 :
+  this.colorTableStartPoint = this.headerSize + 14:
   this.pixelTableStart = this.headerSize + 14 ;
 
   this.pixelTableEnd = buffer.length;
   this.colorTableStartPoint ?
   this.colorTableEndPoint = this.pixelTableStart:
   null;
+
+
+  this.rowSize = Math.ceil(((this.bitsPerPixel * this.width + 31)/32) * 4);
+
   this.buffer = buffer;
 };
+
+//bitmap.readUInt8(1078)
+//Used to get color palette index
