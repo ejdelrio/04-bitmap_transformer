@@ -21,7 +21,7 @@ module.exports = (path, callback, newFileName) => {
     this.colorTableStartPoint ?
     this.colorTableEndPoint = this.pixelTableStart:
     null;
-
+    this.buffer = buffer;
     this.transformedBMP = new TransformedBMP(buffer, this);
 
   };
