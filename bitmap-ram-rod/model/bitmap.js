@@ -45,8 +45,7 @@ module.exports = (path, callback, newFileName) => {
 
   TransformedBMP.prototype.newFile = function(fileName) {
     let newBuffer = this.compileBuffer();
-    console.log(newBuffer.length);
-    fs.writeFile(`../assets/${fileName}.bmp`, newBuffer, (err) => {
+    fs.writeFile(`./assets/${fileName}.bmp`, newBuffer, (err) => {
       if(err) console.error(err);
       console.log('verifier#: ' + newBuffer.readUInt32LE(58));
     });
@@ -63,9 +62,3 @@ module.exports = (path, callback, newFileName) => {
 
 
 };
-
-module.exports('../assets/palette-bitmap.bmp', transform.blackOut, 'black');
-
-
-//bitmap.readUInt8(1078)
-//Used to get color palette index
