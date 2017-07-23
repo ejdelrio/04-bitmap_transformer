@@ -1,9 +1,10 @@
 'use srict';
 
 const fs = require('fs');
+const transform = require('../lib/transformer.js')
 
 
-module.exports = (path) => {
+module.exports = (path, callback) => {
 
 
   fs.readFile(path, (err, asset) => {
@@ -49,6 +50,7 @@ module.exports = (path) => {
     let headerBuf = asset.slice(0,14);
     let DIBBuf = asset.slice(14, 54);
     let colorTableBuffer = asset.slice(54, Bitmap.pixelTableStart);
+    //Same exact value. Delete one of these.
     let colorTableBuf = asset.slice(54, Bitmap.pixelTableStart);
     let pixMapBuf = asset.slice(Bitmap.pixelTableStart);
 
