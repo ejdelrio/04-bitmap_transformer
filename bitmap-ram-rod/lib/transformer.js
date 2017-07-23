@@ -5,9 +5,10 @@ const transform = module.exports = {};
 transform.modify = (buffer, blueCallback, greenCallback, redCallback) => {
   let newColors = buffer.transformedBMP.colorArr;
   for (let i = 3; i < newColors.length; i+=4) {
-    newColors[i - 3] = blueCallback(newColors[i - 3]);
-    newColors[i - 2] = greenCallback(newColors[i - 2]);
-    newColors[i - 1] = redCallback(newColors[i - 1]);
+    let grey = (newColors[i - 3] + newColors[i - 2] + newColors[i - 1]) / 3;
+    newColors[i - 3] = blueCallback(newColors[i - 3], newColors[i - 2], newColors[i - 1], grey);
+    newColors[i - 2] = greenCallback(newColors[i - 2], newColors[i - 3], newColors[i - 1], grey);
+    newColors[i - 1] = redCallback(newColors[i - 1], newColors[i - 2], newColors[i - 3], grey);
   }
   buffer.transformedBMP.colorArr = Buffer.from(newColors);
 };
@@ -73,5 +74,13 @@ transform.whiteOut = function(buffer) {
     () => 255,
     () => 255,
     () => 255
+  );
+};
+
+transform.greyScale = function(buffer) {
+  transform.modify(buffer,
+    (blue, green, red, grey) => (grey),
+    (blue, green, red, grey) => (grey),
+    (blue, green, red, grey) => (grey)
   );
 };

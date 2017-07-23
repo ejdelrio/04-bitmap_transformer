@@ -46,7 +46,7 @@ module.exports = (path, callback, newFileName) => {
     let newBuffer = this.compileBuffer();
     fs.writeFile(`./assets/${fileName}.bmp`, newBuffer, (err) => {
       if(err) console.error(err);
-      console.log('verifier#: ' + newBuffer.readUInt32LE(58));
+      console.log(`${fileName}.bmp created!!`);
     });
   };
 
