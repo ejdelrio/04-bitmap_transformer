@@ -83,3 +83,11 @@ transform.greyScale = function(buffer) {
     (first, second, third) => third
   );
 };
+
+transform.Invert = function(buffer) {
+  transform.modify(buffer,
+    (val) => 255 - val,
+    (val) => 255 - val,
+    (val) => 255 - val
+  );
+};
