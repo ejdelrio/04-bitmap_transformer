@@ -5,6 +5,8 @@ const transform = require('./lib/transformer.js');
 
 let transformations = Object.keys(transform);
 
+console.log(bitmapper);
+
 for(let i = 1; i < transformations.length; i++) {
-  bitmapper('./assets/palette-bitmap.bmp', transform[transformations[i]], transformations[i]);
+  bitmapper.renderImage('./assets/palette-bitmap.bmp', transform[transformations[i]], transformations[i]);
 }
