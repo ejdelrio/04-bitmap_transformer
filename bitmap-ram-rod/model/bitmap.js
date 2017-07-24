@@ -24,7 +24,7 @@ module.exports = (path, callback, newFileName) => {
     this.buffer = buffer;
 
   };
-  
+
   Bitmap.prototype.newFile = function(fileName) {
     let newBuffer = this.buffer;
     fs.writeFile(`./assets/${fileName}.bmp`, newBuffer, (err) => {
@@ -37,10 +37,10 @@ module.exports = (path, callback, newFileName) => {
     if(err) console.error(err);
 
     let bitmap = new Bitmap(asset);
+    console.log(bitmap);
     callback(bitmap);
     bitmap.newFile(newFileName);
   });
-
 
 
 };
