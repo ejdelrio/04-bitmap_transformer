@@ -1,4 +1,4 @@
-'use srict';
+'use strict';
 
 const fs = require('fs');
 const transform = require('../lib/transformer.js');

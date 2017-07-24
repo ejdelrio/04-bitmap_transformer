@@ -6,6 +6,7 @@ const transform = require('./../lib/transformer.js');
 const bitmapper = require('./../model/bitmap.js');
 
 let path = './assets/palette-bitmap.bmp';
+let newPath = './asset/'
 
 describe('Transformer Module Tests', () => {
   describe('#modify', () => {
