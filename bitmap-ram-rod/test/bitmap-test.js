@@ -8,12 +8,11 @@ let path = '../assets/palette-bitmap.bmp';
 
 describe('Constructor Test', function() {
   describe('not an object', function() {
-    it('should return an error', function(done) {
-      let result = bitmapper.Bitmap();
-      expect(err).to.be.an('error');
-      done();
-      });
+    it('should return an error', function() {
+      bitmapper.Bitmap();
+      expect(bitmapper.Bitmap()).to.be.an('error');
     });
+  });
 
   describe('Bitmap object', function() {
     it('should instantiate an object', function(done) {
