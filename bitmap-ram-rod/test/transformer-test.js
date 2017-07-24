@@ -11,12 +11,18 @@ describe('Transformer Module Tests', () => {
   describe('#modify', () => {
     it('Should modify the color palette of a bitmap', (done) => {
       fs.readFile(path, (err, asset) => {
-        let bitBuffer = new bitmapper.Bitmap(asset);
-
         if(err) return console.error(err);
+        let bitBuffer = new bitmapper.Bitmap(asset);
+        let header = asset.toString('hex', 0, 14);
+        let DIB = asset.toString('hex', 14, 54);
+        let colorPallete = asset.toString('hex', 54, 1078);
+        let pixelArray = asset.toString('hex', 1078, asset.length);
+
         transform.modify(bitBuffer, () => 0, () => 0, () => 0);
-        console.log(bitBuffer.buffer.toString('hex', 54, 300));
-        console.log(asset.toString('hex', 54, 300));
+        expect(asset.toString('hex', 0, 14)).to.equal(header);
+        expect(asset.toString('hex', 14, 54)).to.equal(DIB);
+        expect(asset.toString('hex', 54, 1078)).not.to.equal(colorPallete);
+        expect(asset.toString('hex', 1078, asset.length)).to.equal(pixelArray);
         done();
       });
     });
