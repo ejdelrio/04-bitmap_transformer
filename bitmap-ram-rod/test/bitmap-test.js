@@ -12,12 +12,20 @@ describe('Constructor Test', function() {
       done();
       });
     });
-  
-  describe('if an object', function() {
+
+  describe('Bitmap object', function() {
     it('should instantiate an object', function() {
       let result = Bitmap();
       expect(result).to.be.an('object');
     });
+    it('should have all Constructor properties' () => {
+      let result = Bitmap();
+      expect(result).to.have.property('type');
+      expect(result).to.have.property('pixleTableStart', 10);
+      expect(result).to.have.property('headerSize', 14);
+      expect(result).to.have.property('colorTableStartPoint', 'this.header' + 14);
+      expect(result).to.have.property('pixelTableEnd','buffer.length');
+    })
   });
 
   describe('if a type', function() {
