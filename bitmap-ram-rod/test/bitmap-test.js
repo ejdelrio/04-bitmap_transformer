@@ -5,9 +5,11 @@ const bitmapper = require(`${__dirname}/../model/bitmap.js`);
 
 let path = `${__dirname}/../assets/palette-bitmap.bmp`;
 
+
 describe('Constructor Test', function() {
   describe('not an object', function() {
     it('should return an error', function(done) {
+
       let result = bitmapper;
       expect(result).to.throw(Error);
       done();
