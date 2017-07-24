@@ -9,15 +9,13 @@ transform.modify = (parent, blueCallback, greenCallback, redCallback) => {
 
     return bmp.writeUInt8(callback(...hexColors), position);
   };
-  let start = parent.colorTableStartPoint;
-  let end = parent.colorTableEndPoint;
+  let start = parent.colorTableStartPoint, end = parent.colorTableEndPoint;
 
   for (let i = 3 + start; i < end; i+=4) {
     helper(parent.buffer, i - 3)(blueCallback)(i-3, i-2, i-1);
     helper(parent.buffer, i - 2)(greenCallback)(i-2, i-3, i-1);
     helper(parent.buffer, i - 1)(redCallback)(i-1, i-2, i-3);
   }
-  return parent.buffer;
 };
 
 transform.blueShift = function(buffer) {

@@ -34,6 +34,7 @@ Bitmap.prototype.newFile = function(fileName) {
 bitmapper.Bitmap = Bitmap;
 
 
+
 bitmapper.renderImage = function(path, callback, newFileName) {
   fs.readFile(path, (err, asset) => {
     if(err) console.error(err);
