@@ -4,13 +4,13 @@ const fs = require('fs');
 const expect = require('chai').expect;
 const bitmapper = require(`${__dirname}/../model/bitmap.js`);
 
-let path = '../assets/palette-bitmap.bmp';
+let path = './assets/palette-bitmap.bmp';
 
 describe('Constructor Test', function() {
   describe('not an object', function() {
     it('should return an error', function() {
       bitmapper.Bitmap();
-      expect(bitmapper.Bitmap()).to.be.an('error');
+      expect(bitmapper.Bitmap).to.be.an('error');
     });
   });
 
