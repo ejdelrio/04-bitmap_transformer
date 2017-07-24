@@ -5,14 +5,15 @@ const transform = module.exports = {};
 transform.modify = (parent, blueCallback, greenCallback, redCallback) => {
 
   const helper = (bmp, position) => (callback) => (...ind) => {
-    return bmp.writeUInt8(callback(
+    return bmp.writeUInt8(
+      callback(
       bmp.readUInt8(ind[0]), bmp.readUInt8(ind[1]), bmp.readUInt8(ind[2])),
     position);
   };
 
   let start = parent.colorTableStartPoint;
   let end = parent.colorTableEndPoint;
-  
+
   for (let i = 3 + start; i < end; i+=4) {
     helper(parent.buffer, i - 3)(blueCallback)(i-3, i-2, i-1);
     helper(parent.buffer, i - 2)(greenCallback)(i-2, i-3, i-1);
