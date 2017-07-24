@@ -8,9 +8,10 @@ let path = '../assets/palette-bitmap.bmp';
 
 describe('Constructor Test', function() {
   describe('not an object', function() {
-    it('should return an error', function() {
-      bitmapper.Bitmap();
-      expect(bitmapper.Bitmap()).to.be.an('error');
+    it('should return an error', function(done) {
+      let result = bitmapper;
+      expect(result).to.throw(Error);
+      done();
     });
   });
 
@@ -20,8 +21,8 @@ describe('Constructor Test', function() {
         if(err) console.error(err);
         let bitmap = new bitmapper.Bitmap(asset);
         expect(bitmap).to.be.an('object');
+        done();
       });
-      done();
     });
     it('should have all Constructor properties', (done) => {
       fs.readFile(path, (err, asset) => {
@@ -32,8 +33,8 @@ describe('Constructor Test', function() {
         expect(result).to.have.property('headerSize', 14);
         expect(result).to.have.property('colorTableStartPoint', 'this.header' + 14);
         expect(result).to.have.property('pixelTableEnd','buffer.length');
+        done();
       });
-      done();
     });
   });
 });
