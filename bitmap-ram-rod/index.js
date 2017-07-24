@@ -1,10 +1,6 @@
 'use strict';
 
-const bitmapper = require('./model/bitmap.js');
-const transform = require('./lib/transformer.js');
+const bitmap = require('/Users/jamesrbillard/programs/code_fellows/code_401/lab-james/04-bitmap_transformer/bitmap-ram-rod/model/bitmap.js');
+const fs = require('fs');
 
-let transformations = Object.keys(transform);
-
-for(let i = 1; i < transformations.length; i++) {
-  bitmapper('./assets/palette-bitmap.bmp', transform[transformations[i]], transformations[i]);
-}
+bitmap('/Users/jamesrbillard/programs/code_fellows/code_401/lab-james/04-bitmap_transformer/bitmap-ram-rod/assets/palette-bitmap.bmp', 'grayscale');
