@@ -13,10 +13,10 @@ describe('Constructor Test', function() {
       });
     });
   
-    describe('if an object', function() {
-      it('should instantiate an object', function() {
-        let result = Bitmap();
-        expect(result).to.be.an('object');
+  describe('if an object', function() {
+    it('should instantiate an object', function() {
+      let result = Bitmap();
+      expect(result).to.be.an('object');
     });
   });
 
