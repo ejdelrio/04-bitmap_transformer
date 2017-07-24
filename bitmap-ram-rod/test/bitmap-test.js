@@ -2,12 +2,12 @@
 
 const fs = require('fs');
 const expect = require('chai').expect;
-const Bitmap = require(`${__dirname}/../model/bitmap.js`);
+const bitmap = require(`${__dirname}/../model/bitmap.js`);
 
 describe('Constructor Test', function() {
   describe('not an object', function() {
     it('should return an error', function(done) {
-      let result = bitmapConstructor();
+      let result = ();
       expect(err).to.be.an('error');
       done();
       });
