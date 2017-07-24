@@ -8,5 +8,5 @@ let transformations = Object.keys(transform);
 console.log(bitmapper);
 
 for(let i = 1; i < transformations.length; i++) {
-  bitmapper.renderImage('./assets/palette-bitmap.bmp', transform[transformations[i]], transformations[i]);
+  bitmapper('./assets/palette-bitmap.bmp', transform[transformations[i]], transformations[i]);
 }

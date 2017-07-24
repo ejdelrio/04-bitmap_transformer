@@ -1,6 +1,5 @@
 'use strict' ;
 
-const fs = require('fs');
 const expect = require('chai').expect;
 const bitmapper = require(`${__dirname}/../model/bitmap.js`);
 
@@ -34,7 +33,7 @@ describe('Constructor Test', function() {
         expect(data).to.have.property('pixelTableEnd', 11078);
         expect(data).to.have.property('colorTableEndPoint', 1078);
         done();
-      })
-    })
+      });
+    });
   });
 });
