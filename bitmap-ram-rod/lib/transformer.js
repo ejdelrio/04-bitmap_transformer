@@ -5,10 +5,10 @@ const transform = module.exports = {};
 transform.modify = (parent, blueCallback, greenCallback, redCallback) => {
 
   const helper = (bmp, position) => (callback) => (...ind) => {
-    return bmp.writeUInt8(
-      callback(
-      bmp.readUInt8(ind[0]), bmp.readUInt8(ind[1]), bmp.readUInt8(ind[2])),
-    position);
+
+    let hexColors = [bmp.readUInt8(ind[0]), bmp.readUInt8(ind[1]), bmp.readUInt8(ind[2])];
+
+    return bmp.writeUInt8(callback(...hexColors), position);
   };
 
   let start = parent.colorTableStartPoint;
