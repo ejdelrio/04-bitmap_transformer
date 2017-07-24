@@ -9,9 +9,10 @@ let path = './assets/palette-bitmap.bmp';
 
 describe('Transformer Module Tests', () => {
   describe('#modify', () => {
-    it('Should modify the color palette of a bitmap', (done) => {
+    it('Should modify the only the color palette of a bitmap', (done) => {
       fs.readFile(path, (err, asset) => {
         if(err) return console.error(err);
+        
         let bitBuffer = new bitmapper.Bitmap(asset);
         let header = asset.toString('hex', 0, 14);
         let DIB = asset.toString('hex', 14, 54);
