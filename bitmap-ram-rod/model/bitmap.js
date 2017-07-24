@@ -35,12 +35,8 @@ module.exports = (path, callback, newFileName) => {
 
   fs.readFile(path, (err, asset) => {
     if(err) console.error(err);
-
     let bitmap = new Bitmap(asset);
     callback(bitmap);
     bitmap.newFile(newFileName);
   });
-
-
-
 };
