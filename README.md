@@ -1,61 +1,40 @@
-![CF](https://camo.githubusercontent.com/70edab54bba80edb7493cad3135e9606781cbb6b/687474703a2f2f692e696d6775722e636f6d2f377635415363382e706e67) Lab 04: Bitmap Transformer
-===
+-----Bitmap Transformer-----
 
-## To Submit this Assignment
-* have team leader fork this repository
-* have team leader add team members as collaborators to the team fork
-* team members should clone team fork
-* write all of your code in a directory name `bitmap-` + `<team name>` **e.g.** `bitmap-weasels`
-* submit a pull request to this repository when done
-* each person will submit a link to their own PR in canvas
-* each person write a question and observation on canvas
+Overview: Bitmap transformer reads a bitmap file and applies one of ten transformations to the file. The modified file is saved as a separate entity.
+The project is separated into two major components and a test. Additionally, there is a directory of assets which contains the original bitmap image as well as the modified duplicates.
 
-## Learning Objectives  
-* students will be able to manipulate binary data using the node.js `Buffer` class
-* students will be able to architect modular solutions to solving problems
+ The directory branch is as follows:
 
-## Resources  
-* [Bitmap Specification](https://en.wikipedia.org/wiki/BMP_file_format)
-* [NodeJS Buffer docs](https://nodejs.org/api/buffer.html)
+ bitmapper_ram-rod
+ |
+ |--assets
+ |
+ |--lib
+ |
+ |--model
+ |
+ |--node_modules
+ |
+ |--test
 
-#### Feature Tasks
+ -----Directory Overview-----
 
-For this assignment you will be building a bitmap (`.bmp`) reader and transformer. It will read a bitmap in from disk, run one or more color transforms on the bitmap and then write it out to a new file. This project will require the use of node buffers in order to manipulate binary data. Your project should include tests, as well as a `package.json`, `.eslintrc`, `README.md`, and a `.gitignore`. Make sure to run all your code through eslint. The process will look something like this:
+---assets---
 
-1. open the original bitmap file using fs and read it into a buffer
-2. convert the buffer header data into a Javascript Object (using constructors)
-3. run a transform on the buffer directly
-4. write the buffer to a new file
+*Houses all bitmap originals and modified duplicates*
 
-The wikipedia article found here [Bitmap Specification](https://en.wikipedia.org/wiki/BMP_file_format) describes the byte specification of a "windows bitmap file." We'll be working with the simplest version, meaning no compression.
+---model---
 
-* your project should have three ***(or more)*** transforms
-* invert the colors (***hint:*** subtract every color value from the max color value which is 255),
-* grayscale the colors (***hint:*** multiply each color value by a constant, just make sure your values don't go over 255)
-* (red|green|blue)scale the colors (***hint:*** same as above but only multiply one of the colors)
+bitmap.js module: Exports the bitmapper object which models bitmaps as javaScript objects. The bitmapper objects properties are described below:
 
-#### Bonus:
-* ability to handle various sized bitmap
-* ability to handle LE and BE computers with a single if statement
-* utilizes a command line interface (CLI)
-* CLI can select the transforms
+Bitmap : serves as an object constructor. All of bitmaps properties correspond to meta data that is interpreted from the bitmap image as buffer housing hexi-decimal values using node's native fs module. properties also hold information that indicates the start and end points of various sections of the file. The original buffer is stored as a property of the instantiated object.
 
-#### Suggested Directory Structure (this is optional):
-* suggested directory structure:
-  - **index.js**
-  - **lib**
-    - bitmap file helper
-  - **model**
-    - bitmap constructor
-    - color constructor
-  - **test**
-    - bitmap file helper test
-    - bitmap constructor test
-    - color constructor test
+Bitmap.newFile : method of the Bitmap constructor that takes a string as a parameter. The string will serve as the file name for a new image. The stored buffer in the object will be used to write the new file.
 
-#### Rubric:
-* **tests:** 3pts
-* **package.json:** 2pts
-* **read bitmap meta data:** 5pts
-* **successfully apply transforms:** 5pts
-* **project design and organization:** 5pts
+renderImage : Wrapper for node's native fs module. Takes a path, a callback and a file name as parameters. The path will be used with fs.readFile to retrieve a buffer from a bitmap file. The buffer will be instantiated as a new Bitmap object The callback will come from the transformer.js module. This dictates what type of transformation to apply to the buffer. Finally, the name will be passed to the instantiated Bitmap's newFile method.
+
+---lib--- 
+
+transformer.js module: exports the transform object which applies 1 of 10 different transformations to a Bitmap object that is passed as a parameter. The transform object properties are described below:
+
+modify : Serves as the primary function in transformer.js. All other methods will serve as a wrapper for modify. Modify requires 4 parameters; a Bitmap object, and 3 callbacks. Each callback will be applied to one of the 3 portions of a hex color; red, green and blue. The Bitmap object is iterated over using the stored integers that represent the start and end position of the color palette. The iterations increment by 4. One for red, green, blue and the padding. The Bitmap's stored buffer uses it's readUInt8 method on i - 3, i - 2, and i - 1. to return a value between 0 and 255. Those values are then passed to the callbacks. The return of the call back is then written back into the buffer at it's relative position using Buffer.writeUint8.
