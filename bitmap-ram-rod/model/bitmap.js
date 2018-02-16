@@ -5,7 +5,7 @@ const fs = require('fs');
 const bitmapper = module.exports = {};
 
 
-function Bitmap(buffer) {
+bitmapper.Bitmap = function (buffer) {
   this.type = buffer.toString('utf-8', 0, 2);
   this.pixelTableStart = buffer.readUInt16LE(10);
   this.bitsPerPixel = buffer.readUInt16LE(28);
@@ -23,7 +23,7 @@ function Bitmap(buffer) {
   this.buffer = buffer;
 }
 
-Bitmap.prototype.newFile = function(fileName) {
+bitmapper.Bitmap.prototype.newFile = function(fileName) {
   let newBuffer = this.buffer;
   fs.writeFile(`./assets/${fileName}.bmp`, newBuffer, (err) => {
     if(err) console.error(err);
@@ -31,14 +31,13 @@ Bitmap.prototype.newFile = function(fileName) {
   });
 };
 
-bitmapper.Bitmap = Bitmap;
 
 
 
 bitmapper.renderImage = function(path, callback, newFileName) {
   fs.readFile(path, (err, asset) => {
     if(err) console.error(err);
-    let bitmap = new bitmapper.Bitmap(asset);
+    let bitmap = new this.Bitmap(asset);
     callback(bitmap);
     bitmap.newFile(newFileName);
   });

@@ -3,19 +3,19 @@
 const transform = module.exports = {};
 
 transform.modify = (parent, blueCallback, greenCallback, redCallback) => {
-
-  const helper = (bmp, position) => (callback) => (...ind) => {
-    let hexColors = [bmp.readUInt8(ind[0]), bmp.readUInt8(ind[1]), bmp.readUInt8(ind[2])];
-
-    return bmp.writeUInt8(callback(...hexColors), position);
+  let buffer = parent.buffer
+  const helper = (position, callback, ...ind) => {
+    ind.forEach((val, i, arr) => arr[i] = buffer.readUInt8(val));
+    return buffer.writeUInt8(callback(...ind), position);
   };
   let start = parent.colorTableStartPoint, end = parent.colorTableEndPoint;
 
   for (let i = 3 + start; i < end; i+=4) {
-    helper(parent.buffer, i - 3)(blueCallback)(i-3, i-2, i-1);
-    helper(parent.buffer, i - 2)(greenCallback)(i-2, i-3, i-1);
-    helper(parent.buffer, i - 1)(redCallback)(i-1, i-2, i-3);
+    helper(i - 3, blueCallback, i-3, i-2, i-1);
+    helper(i - 2, greenCallback, i-2, i-3, i-1);
+    helper(i - 1, redCallback, i-1, i-2, i-3);
   }
+  parent.buffer = buffer;
 };
 
 transform.blueShift = function(buffer) {
